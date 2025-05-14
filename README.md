@@ -1,81 +1,36 @@
-# 🛒 Next.js E-Commerce Project Plan (Momen)
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## 🧠 Step 1: Plan Before You Code
+## Getting Started
 
-Before diving into the code, let’s prepare in a smart and structured way:
+First, run the development server:
 
-### ✅ Define the Scope (MVP - Minimum Viable Product)
-Basic features to start with:
-- Product listing page
-- Product details page
-- Add to cart
-- Checkout (dummy form)
-- User authentication (sign up / login)
-- Admin dashboard (CRUD for products)
-
-👉 Keep it small first. Add features like payments, filters, reviews later.
-
----
-
-## 🧱 Step 2: Choose Your Tech Stack
-
-| Category            | Tool                        |
-|---------------------|-----------------------------|
-| Styling             | Tailwind CSS                |
-| State Management    | React Context / Zustand / Redux Toolkit |
-| Authentication      | NextAuth.js or Clerk        |
-| Backend             | API Routes (Next.js) or Express/Strapi |
-| Database            | PostgreSQL + Prisma ORM     |
-| Image Hosting       | Cloudinary or Uploadthing   |
-| Payment             | Stripe (optional later)     |
-| CMS (Optional)      | Sanity / Contentful         |
-
----
-
-## 🗂️ Step 3: Design Mockups
-Use **Figma** or even **pen and paper** to design:
-- Home page
-- Product listing
-- Product details
-- Cart & Checkout
-- Sign in / up
-- Admin dashboard
-
-Templates you can use:
-- [shadcn/ui](https://ui.shadcn.com)
-- [Tailwind UI](https://tailwindui.com)
-- Free Figma UI kits
-
----
-
-## ✅ Step 4: Project Checklist
-Create a checklist and tackle one task at a time:
-
-```markdown
-- [ ] Setup Next.js + Tailwind
-- [ ] Create layout (navbar, footer)
-- [ ] Display product grid
-- [ ] Create product details page
-- [ ] Add to cart logic
-- [ ] Implement auth (NextAuth)
-- [ ] Setup PostgreSQL + Prisma schema
-- [ ] Create admin dashboard (CRUD products)
-- [ ] Deploy to Vercel
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 🧰 Step 5: Prepare Your Tools
-Make sure you have the following ready:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- [x] Node.js & npm installed
-- [x] VS Code + useful extensions (Prettier, Tailwind, Prisma)
-- [x] GitHub repo created
-- [x] PostgreSQL database (Supabase is great for hosting)
-- [x] Your mindset ready to build and learn 💪
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
----
+## Learn More
 
-Let’s go! 🚀
+To learn more about Next.js, take a look at the following resources:
 
-Would you like me to generate the initial folder structure and setup commands?
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
