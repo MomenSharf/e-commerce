@@ -90,21 +90,23 @@ async function main() {
         : null;
 
       // Parse categories and find or create
-      const categoryRecords = (await Promise.all(
-        ((): string[] => {
-          if (!categories) return [];
-          try {
-            return JSON.parse(categories);
-          } catch {
-            return categories.split(',').map((cat: string) => cat.trim());
-          }
-        })().map(async (name) => {
-          return await prisma.category.findUnique({ where: { name } });
-        })
-      )).filter(
-        (cat): cat is { id: string; name: string; parentId: string | null } =>
-          cat !== null
-      );
+      let categoryRecords: ({ id: string; name: string; parentId: string | null; } | null)[] = [];
+      if (categories) {
+        let parsedCategories: string[] = [];
+        try {
+          parsedCategories = JSON.parse(categories);
+        } catch {
+          parsedCategories = categories.split(',').map((cat: string) => cat.trim());
+        }
+
+        categoryRecords = await Promise.all(
+          parsedCategories.map(async (name) => {
+            const existing = await prisma.category.findUnique({ where: { name } });
+            return existing;
+          })
+        );
+        categoryRecords = categoryRecords.filter(Boolean); // remove nulls
+      }
 
       // Create product
       await prisma.product.create({
@@ -112,9 +114,7 @@ async function main() {
           title,
           sellerName: seller_name,
           brand: brandRecord ? { connect: { id: brandRecord.id } } : undefined,
-          department: departmentRecord
-            ? { connect: { id: departmentRecord.id } }
-            : undefined,
+          department: departmentRecord ? { connect: { id: departmentRecord.id } } : undefined,
           description: description || null,
           initialPrice: parseFloat(initial_price || '') || null,
           finalPrice: parseFloat(final_price || '') || null,
@@ -163,11 +163,10 @@ async function main() {
           productDetails: product_details || null,
           pricesBreakdown: prices_breakdown || null,
           countryOfOrigin: country_of_origin || null,
-          // Timestamp must be non-null, so fallback to current date if missing
-          timestamp: timestamp ? new Date(timestamp) : new Date(),
+          timestamp: new Date(timestamp),
 
           categories: {
-            connect: categoryRecords.map((cat) => ({ id: cat.id })),
+            connect: categoryRecords.map((cat) => ({ id: cat!.id })),
           },
         },
       });

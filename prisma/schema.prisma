@@ -3,27 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql" // or your DB provider
+  url      = env("DATABASE_URL")
   // directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
+  email         String         @unique
   name          String?
-  email         String?   @unique
   emailVerified DateTime?
   image         String?
-
-  accounts Account[]
-  sessions Session[]
-  orders   Order[]
-  wishlist Wishlist[]
-  reviews  Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-  Rating    Rating[]
+  accounts      Account[]
+  sessions      Session[]
+  favorites     Favorite[]
+  saveForLaters SaveForLater[]
+  settings      UserSettings?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Account {
@@ -39,8 +36,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -50,92 +46,118 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model UserSettings {
+  id       String  @id @default(cuid())
+  userId   String  @unique
+  region   String?
+  currency String?
+  language String?
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {
-  id                String   @id @default(cuid())
-  asin              String   @unique
-  title             String
-  imgUrl            String
-  productURL        String
-  stars             Float
-  reviewCount       Int
-  price             Float
-  listPrice         Float?
-  isBestSeller      Boolean
-  boughtInLastMonth Int
-  categoryId        Int
-  category          Category @relation(fields: [categoryId], references: [id])
+  id                 String      @id @default(cuid())
+  timestamp          DateTime    @map("timestamp") @db.Timestamp(6)
+  title              String
+  sellerName         String      @map("seller_name")
+  brandId            String?
+  brand              Brand?      @relation(fields: [brandId], references: [id])
+  departmentId       String?
+  department         Department? @relation(fields: [departmentId], references: [id])
+  description        String?
+  initialPrice       Float?      @map("initial_price")
+  finalPrice         Float?      @map("final_price")
+  currency           String?
+  availability       Boolean
+  reviewsCount       Int?        @map("reviews_count")
+  categories         Category[]  @relation("ProductCategories")
+  asin               String      @unique
+  buyboxSeller       String?     @map("buybox_seller")
+  numberOfSellers    Int?        @map("number_of_sellers")
+  rootBsRank         Int?        @map("root_bs_rank")
+  answeredQuestions  Int?        @map("answered_questions")
+  domain             String?
+  imagesCount        Int?        @map("images_count")
+  url                String?
+  videoCount         Int?        @map("video_count")
+  imageUrl           String?     @map("image_url")
+  itemWeight         String?     @map("item_weight")
+  rating             Float?
+  productDimensions  String?     @map("product_dimensions")
+  sellerId           String?     @map("seller_id")
+  dateFirstAvailable DateTime?   @map("date_first_available")
+  discount           String?
+  modelNumber        String?     @map("model_number")
+  manufacturer       String?
+  plusContent        String?     @map("plus_content")
+  upc                String?
+  video              String?
+  topReview          String?     @map("top_review")
+  variations         Json?
+  delivery           String?
+  format             String?
+  buyboxPrices       String?     @map("buybox_prices")
+  parentAsin         String?     @map("parent_asin")
+  inputAsin          String?     @map("input_asin")
+  ingredients        String?
+  originUrl          String?     @map("origin_url")
+  boughtPastMonth    Boolean?    @map("bought_past_month")
+  isAvailable        Boolean?    @map("is_available")
+  rootBsCategory     String?     @map("root_bs_category")
+  bsCategory         String?     @map("bs_category")
+  bsRank             Int?        @map("bs_rank")
+  badge              String?
+  subcategoryRank    Int?        @map("subcategory_rank")
+  amazonChoice       Boolean?    @map("amazon_choice")
+  images             String?
+  productDetails     String?     @map("product_details")
+  pricesBreakdown    String?     @map("prices_breakdown")
+  countryOfOrigin    String?     @map("country_of_origin")
 
-  orderItems   OrderItem[]
-  wishlistedBy Wishlist[]
-  reviews      Review[]
-  ratings      Rating[]
+  favorites     Favorite[]
+  saveForLaters SaveForLater[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  @@index([brandId])
+  @@index([asin])
+}
+
+model Favorite {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model SaveForLater {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
 }
 
 model Category {
-  id            Int       @id
-  category_name String    @unique
-  products      Product[]
+  id       String     @id @default(cuid())
+  name     String     @unique
+  products Product[]  @relation("ProductCategories")
 }
 
-model Order {
-  id         String      @id @default(cuid())
-  userId     String
-  user       User        @relation(fields: [userId], references: [id])
-  orderItems OrderItem[]
-  total      Float
-  status     String      @default("pending")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt @default(now())
+model Brand {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  products Product[]
 }
 
-model OrderItem {
-  id        String @id @default(cuid())
-  orderId   String
-  productId String
-  quantity  Int    @default(1)
-  price     Float
-
-  order   Order   @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-}
-
-model Wishlist {
-  id        String @id @default(cuid())
-  userId    String
-  productId String
-
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-
-  @@unique([userId, productId])
-}
-
-model Review {
-  id        String   @id @default(cuid())
-  userId    String
-  productId String
-  content   String
-  createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-}
-
-model Rating {
-  id        String @id @default(cuid())
-  userId    String
-  productId String
-  rating    Int // e.g., 1 to 5
-
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-
-  @@unique([userId, productId])
+model Department {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  products Product[]
 }
