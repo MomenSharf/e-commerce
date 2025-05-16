@@ -42,6 +42,7 @@ export default function CategorySelector() {
       startTransition(async () => {
         fetchCategories();
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (
@@ -51,7 +52,7 @@ export default function CategorySelector() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[150px] md:w-[200px] justify-between rounded-tl-none rounded-bl-none sm:rounded-none border-x-0 max-sm:text-xs"
+          className="w-[150px] md:w-[200px] justify-between rounded-tl-none rounded-bl-none md:rounded-none border-x-0 max-sm:text-xs"
         >
           <span className="truncate" title={value ?? ""}>
             {value ?? "All Categories"}

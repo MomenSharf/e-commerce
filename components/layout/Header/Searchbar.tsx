@@ -7,7 +7,7 @@ export default async function Searchbar() {
     <div className="flex max-w-2xl m-auto">
       <SearchInput />
       <CategorySelector />
-      <Button className="max-sm:hidden rounded-tl-none rounded-bl-none">
+      <Button className="max-md:hidden rounded-tl-none rounded-bl-none">
         Search
       </Button>
     </div>
