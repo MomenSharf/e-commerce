@@ -1,14 +1,13 @@
 import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { ThemeInitializer } from "@/components/ThemeInitializer";
 
-const inter = Inter({
+const rubik = Rubik({
   subsets: ["latin"],
   display: "swap",
-  weight: ["100", "200", "300", "400", "500", "600", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-        <body className={`${inter.className}  antialiased`}>
+        <body className={`${rubik.className}  antialiased`}>
           <ThemeInitializer />
           <div className="flex flex-col">
             <Header />

@@ -6,20 +6,19 @@ import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
+  CommandList
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getAllCategories } from "@/lib/actions/category.actions";
 import { cn } from "@/lib/utils";
 import { Category } from "@prisma/client";
-import { useEffect, useRef, useState, useTransition } from "react";
-import { getAllCategories } from "@/lib/actions/category.actions";
+import { useEffect, useState, useTransition } from "react";
 
 export default function CategorySelector() {
   const [open, setOpen] = useState(false);
@@ -65,7 +64,6 @@ export default function CategorySelector() {
           <CommandInput placeholder="Search framework..." className="h-9" />
           <CommandList>
             {!isPending && <CommandEmpty>No Category found.</CommandEmpty>}
-            <CommandGroup>
               {isPending ? (
                 <div className="flex justify-center items-center py-3">
                   <Loader className="animate-spin" />
@@ -98,7 +96,6 @@ export default function CategorySelector() {
                   Error
                 </div>
               )}
-            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
