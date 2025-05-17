@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Category } from "@prisma/client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { getAllCategories } from "@/lib/actions/category.actions";
 
 export default function CategorySelector() {
@@ -42,7 +42,7 @@ export default function CategorySelector() {
       startTransition(async () => {
         fetchCategories();
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

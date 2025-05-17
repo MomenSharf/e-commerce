@@ -3,7 +3,7 @@ import NavLinks from "./Navbar/NavLinks";
 
 export default function Navbar() {
   return (
-    <div className="flex justify-between border-t p-2">
+    <div className="flex justify-between">
       <NavLinks />
     </div>
   );

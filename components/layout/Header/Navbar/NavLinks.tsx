@@ -14,8 +14,8 @@ export default function NavLinks() {
           <li key={label}>
             <Link href={href}>
               <span
-                className={cn('',{
-                  "text-primary": pathname === href,
+                className={cn('hover:text-primary transition-colors',{
+                  "text-primary font-medium": pathname === href,
                 })}
               >
                 {label}
